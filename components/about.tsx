@@ -16,11 +16,11 @@ type Pillar = {
   cta: string
 }
 
-export function about() {
+export function About() {
   const team = [
-    { name: "Name One", image: "member1.jpg" },
-    { name: "Name Two", image: "member2.jpg" },
-    { name: "Name Three", image: "member3.jpg" },
+    { name: "Name One", image: "/images/member1.jpeg" },
+    { name: "Name Two", image: "/images/member2.HEIC" },
+    { name: "Name Three", image: "/images/member3.jpg.jpeg" },
   ]
 
   return (
