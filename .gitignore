@@ -7,8 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-.next
+# dependencies
 node_modules
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+build/
+
 dist
 dist-ssr
 *.local
