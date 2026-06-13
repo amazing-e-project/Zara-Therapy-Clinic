@@ -77,7 +77,7 @@ export function About() {
   const team = [
     { name: "Dennies Jairo", image: "/images/member1.jpeg" },
     { name: "Raphaella Arboiz", image: "/images/member2.jpg" },
-    { name: "Jian Generans", image: "/images/member3.jpg.jpeg" },
+    { name: "Jian Generans", image: "/images/member3.jpg" },
   ]
 
   return (
@@ -88,7 +88,7 @@ export function About() {
         <div className="grid md:grid-cols-3 gap-8 mb-24">
           {team.map((member, i) => (
             <div key={i} className="flex flex-col items-center">
-              <div className="w-full h-100 overflow-hidden border border-border bg-muted mb-4">
+              <div className="w-full h-95 overflow-hidden border border-border bg-muted mb-4">
                 <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
               </div>
               <h3 className="font-heading text-xl">{member.name}</h3>
