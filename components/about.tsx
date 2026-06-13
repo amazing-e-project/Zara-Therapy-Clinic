@@ -16,38 +16,6 @@ type Pillar = {
   cta: string
 }
 
-export function About() {
-  const team = [
-    { name: "Name One", image: "/images/member1.jpeg" },
-    { name: "Name Two", image: "/images/member2.HEIC" },
-    { name: "Name Three", image: "/images/member3.jpg.jpeg" },
-  ]
-
-  return (
-    <section id="about" className="py-24 bg-background">
-      <div className="mx-auto max-w-7xl px-8">
-        <h2 className="font-heading text-4xl mb-12 text-center">About Our Team</h2>
-        
-        {/* Team Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {team.map((member, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div className="w-full aspect-[3/4] overflow-hidden border border-border bg-muted mb-4">
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="font-heading text-xl">{member.name}</h3>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 const pillars: Pillar[] = [
   {
     icon: HeartPulse,
@@ -145,6 +113,37 @@ const pillars: Pillar[] = [
 
 export function About() {
   const [active, setActive] = useState<Pillar | null>(null)
+
+  const team = [
+    { name: "Dennies Jairo", image: "/images/member1.jpeg" },
+    { name: "Raphaella Arboiz", image: "/images/member2.jpg" },
+    { name: "Jian Generans", image: "/images/member3.jpg" },
+  ]
+
+  return (
+    <section id="about" className="py-24 bg-background">
+      <div className="mx-auto max-w-7xl px-8">
+        <h2 className="font-heading text-4xl mb-12 text-center">About Our Team</h2>
+        
+        {/* Team Grid */}
+        <div className="grid md:grid-cols-3 gap-8">
+          {team.map((member, i) => (
+            <div key={i} className="flex flex-col items-center">
+              <div className="w-full aspect-[3/4] overflow-hidden border border-border bg-muted mb-4">
+                <img 
+                  src={member.image} 
+                  alt={member.name} 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="font-heading text-xl">{member.name}</h3>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
   return (
     <section id="about" className="relative py-28">
