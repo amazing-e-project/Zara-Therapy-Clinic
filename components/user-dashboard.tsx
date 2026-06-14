@@ -399,29 +399,36 @@ export function UserDashboard({
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
   /* Read appointments for the logged-in user */
-  const loadAppointments = useCallback(() => {
-    if (!user) { setAppointments([]); return }
-    const full = getLoggedInUserFull()
-    setUserEmail(full?.email ?? null)
+const loadAppointments = useCallback(async () => {
+  if (!user) { setAppointments([]); return }
+  const full = getLoggedInUserFull()
+  setUserEmail(full?.email ?? null)
+  try {
+    const params = new URLSearchParams()
+    if (full?.email) params.set('email', full.email)
+    params.set('name', user)
+    const res = await fetch(`/api/bookings?${params.toString()}`)
+    const data = await res.json()
+    const upcoming = (data.bookings ?? []).filter(
+      (a: any) => new Date(a.date + 'T23:59:59') >= new Date()
+    )
+    setAppointments(upcoming)
+  } catch {
+    // fallback to localStorage
     const all = getStoredAppointments()
-    // Match by name (session identifier) or email
     const mine = all.filter((a) =>
       a.name.toLowerCase() === user.toLowerCase() ||
       (full?.email && a.email.toLowerCase() === full.email.toLowerCase())
     )
-    // Only upcoming
-    const upcoming = mine.filter(
-      (a) => new Date(a.date + "T23:59:59") >= new Date()
-    )
-    setAppointments(upcoming)
-  }, [user])
+    setAppointments(mine.filter((a) => new Date(a.date + 'T23:59:59') >= new Date()))
+  }
+}, [user])
 
-  useEffect(() => {
-    loadAppointments()
-    /* Listen for real-time booking confirms from BookingWizard */
-    window.addEventListener("zara_appointments_changed", loadAppointments)
-    return () => window.removeEventListener("zara_appointments_changed", loadAppointments)
-  }, [loadAppointments])
+useEffect(() => {
+  loadAppointments()
+  window.addEventListener("zara_appointments_changed", loadAppointments)
+  return () => window.removeEventListener("zara_appointments_changed", loadAppointments)
+}, [loadAppointments])
 
   /* Cancel handler — removes appointment and releases therapist slot */
   async function handleCancel(id: string) {
