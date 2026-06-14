@@ -26,8 +26,12 @@ export function getLoggedInUserFull(): StoredUser | null {
   try {
     const session = sessionStorage.getItem("zara_session")
     if (!session) return null
-    const users = getStoredUsers()
-    return users.find((u) => u.name === session) ?? null
+    return {
+      name: session,
+      email: sessionStorage.getItem("zara_email") ?? "",
+      password: "",
+      gender: (sessionStorage.getItem("zara_gender") as Gender) ?? "Female",
+    }
   } catch {
     return null
   }
@@ -74,13 +78,15 @@ export function AuthModal({
       return
     }
     sessionStorage.setItem("zara_session", name)
+    sessionStorage.setItem("zara_gender", gender as string)
+    sessionStorage.setItem("zara_email", email.toLowerCase())
     onLogin(name)
   } catch {
     setError("Network error. Please try again.")
   }
 }
 
-  async function handleLogin(e: React.FormEvent) {
+async function handleLogin(e: React.FormEvent) {
   e.preventDefault()
   setError("")
   try {
@@ -95,6 +101,8 @@ export function AuthModal({
       return
     }
     sessionStorage.setItem("zara_session", data.name)
+    sessionStorage.setItem("zara_gender", data.gender)
+    sessionStorage.setItem("zara_email", data.email)
     onLogin(data.name)
   } catch {
     setError("Network error. Please try again.")
