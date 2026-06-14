@@ -64,33 +64,33 @@ function EnquireModal({ productName, productPrice, onClose }: EnquireModalProps)
     { value: "Phone",    icon: <Phone className="h-4 w-4" />,         placeholder: "+974 XXXX XXXX" },
   ]
 
-  function handleSend(e: React.FormEvent) {
-    e.preventDefault()
-    setError("")
-    if (!contactDetail.trim()) {
-      setError(`Please enter your ${contact} contact details.`)
-      return
-    }
-    if (!message.trim()) {
-      setError("Please add a message before sending.")
-      return
-    }
-    // Save to localStorage
-    try {
-      const key = "zara_enquiries"
-      const existing = JSON.parse(localStorage.getItem(key) || "[]")
-      existing.push({
+  async function handleSend(e: React.FormEvent) {
+  e.preventDefault()
+  setError("")
+  if (!contactDetail.trim()) {
+    setError(`Please enter your ${contact} contact details.`)
+    return
+  }
+  if (!message.trim()) {
+    setError("Please add a message before sending.")
+    return
+  }
+  try {
+    await fetch("/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         product: productName,
         price: productPrice,
         method: contact,
         detail: contactDetail,
         message,
         sentAt: new Date().toISOString(),
-      })
-      localStorage.setItem(key, JSON.stringify(existing))
-    } catch { /* silent */ }
-    setSent(true)
-  }
+      }),
+    })
+  } catch {}
+  setSent(true)
+}
 
   return (
     <div
