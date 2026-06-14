@@ -13,7 +13,7 @@ import { AuthModal } from "@/components/auth-modal"
 import { FallingLeaves } from "@/components/falling-leaves"
 import { BookingWizard, ReservationsDashboard } from "@/components/booking-wizard"
 import { UserDashboard } from "@/components/user-dashboard"
-import type { Service } from "@/lib/clinic-data"
+import type { Service } from "@/app/api/test-db/lib/clinic-data"
 import type { Therapist } from "@/components/therapists"
 
 export default function Page() {
