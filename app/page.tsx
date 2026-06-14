@@ -31,13 +31,13 @@ export default function Page() {
   } | null>(null)
 
   useEffect(() => {
-    const session = localStorage.getItem("zara_session")
+    const session = sessionStorage.getItem("zara_session")
     if (session) setUser(session)
   }, [])
 
   function handleLogin(name: string) {
     setUser(name)
-    localStorage.setItem("zara_session", name)
+    sessionStorage.setItem("zara_session", name)
     setAuthOpen(false)
 
     /* If the guest was interrupted mid-booking, resume their reservation
@@ -52,7 +52,7 @@ export default function Page() {
 
   function handleLogout() {
     setUser(null)
-    localStorage.removeItem("zara_session")
+    sessionStorage.removeItem("zara_session")
   }
 
   function openBooking(service?: Service, therapist?: Therapist) {
@@ -60,7 +60,7 @@ export default function Page() {
        booking choices in state and pop the themed auth modal as an overlay
        instead of opening the wizard or blocking with an alert. */
     const hasSession =
-      typeof window !== "undefined" && !!localStorage.getItem("zara_session")
+      typeof window !== "undefined" && !!sessionStorage.getItem("zara_session")
     if (!hasSession) {
       setPendingBooking({ service: service ?? null, therapist: therapist ?? null })
       setAuthOpen(true)

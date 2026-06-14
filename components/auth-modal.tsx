@@ -24,7 +24,7 @@ export function getStoredUsers(): StoredUser[] {
 
 export function getLoggedInUserFull(): StoredUser | null {
   try {
-    const session = localStorage.getItem("zara_session")
+    const session = sessionStorage.getItem("zara_session")
     if (!session) return null
     const users = getStoredUsers()
     return users.find((u) => u.name === session) ?? null
@@ -73,7 +73,7 @@ export function AuthModal({
       setError(data.error || "Something went wrong.")
       return
     }
-    localStorage.setItem("zara_session", name)
+    sessionStorage.setItem("zara_session", name)
     onLogin(name)
   } catch {
     setError("Network error. Please try again.")
@@ -94,7 +94,7 @@ export function AuthModal({
       setError(data.error || "Invalid credentials.")
       return
     }
-    localStorage.setItem("zara_session", data.name)
+    sessionStorage.setItem("zara_session", data.name)
     onLogin(data.name)
   } catch {
     setError("Network error. Please try again.")

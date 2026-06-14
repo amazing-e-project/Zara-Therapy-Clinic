@@ -222,7 +222,7 @@ export function BookingWizard({
       localStorage) and surface the themed login / sign-up modal instead.
     */
     const hasSession =
-      typeof window !== "undefined" && !!localStorage.getItem("zara_session")
+      typeof window !== "undefined" && !!sessionStorage.getItem("zara_session")
     if (!hasSession) {
       onRequireAuth?.()
       return
