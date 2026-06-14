@@ -51,47 +51,55 @@ export function AuthModal({
   const [gender, setGender] = useState<Gender | "">("")
   const [error, setError] = useState("")
 
-  function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    setError("")
-    if (!name || !email || !password) {
-      setError("Please complete every field.")
+ async function handleSignup(e: React.FormEvent) {
+  e.preventDefault()
+  setError("")
+  if (!name || !email || !password) {
+    setError("Please complete every field.")
+    return
+  }
+  if (!gender) {
+    setError("Please select your gender to personalise your experience.")
+    return
+  }
+  try {
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password, gender }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      setError(data.error || "Something went wrong.")
       return
     }
-    if (!gender) {
-      setError("Please select your gender to personalise your experience.")
-      return
-    }
-    const users = getStoredUsers()
-    if (users.some((u) => u.email === email.toLowerCase())) {
-      setError("An account with this email already exists.")
-      return
-    }
-    const newUser: StoredUser = {
-      name,
-      email: email.toLowerCase(),
-      password,
-      gender: gender as Gender,
-    }
-    users.push(newUser)
-    localStorage.setItem(USERS_KEY, JSON.stringify(users))
+    localStorage.setItem("zara_session", name)
     onLogin(name)
+  } catch {
+    setError("Network error. Please try again.")
   }
+}
 
-  function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-    setError("")
-    const users = getStoredUsers()
-    const match = users.find(
-      (u) => u.email === email.toLowerCase() && u.password === password,
-    )
-    if (!match) {
-      setError("Invalid credentials. Please try again or sign up.")
+  async function handleLogin(e: React.FormEvent) {
+  e.preventDefault()
+  setError("")
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      setError(data.error || "Invalid credentials.")
       return
     }
-    onLogin(match.name)
+    localStorage.setItem("zara_session", data.name)
+    onLogin(data.name)
+  } catch {
+    setError("Network error. Please try again.")
   }
-
+}
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm animate-fade-in"
