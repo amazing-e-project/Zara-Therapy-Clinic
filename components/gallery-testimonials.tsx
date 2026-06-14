@@ -215,41 +215,43 @@ export function Testimonials({
     if (!user) setSubmitted(false)
   }, [user])
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!user) return
-    setError("")
-
-    if (!message.trim() || message.trim().length < 10) {
-      setError("Please write at least 10 characters.")
-      return
-    }
-    if (rating === 0) {
-      setError("Please select a star rating.")
-      return
-    }
-
-    const newReview: UserReview = {
-      id: Date.now().toString(),
-      name: user,
-      message: message.trim(),
-      rating,
-      date: new Date().toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }),
-    }
-
-    const updated = [newReview, ...loadReviews()]
-    saveReviews(updated)
-    setUserReviews(updated)
-
-    setMessage("")
-    setRating(0)
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 4000)
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault()
+  if (!user) return
+  setError("")
+  if (!message.trim() || message.trim().length < 10) {
+    setError("Please write at least 10 characters.")
+    return
   }
+  if (rating === 0) {
+    setError("Please select a star rating.")
+    return
+  }
+  const newReview: UserReview = {
+    id: Date.now().toString(),
+    name: user,
+    message: message.trim(),
+    rating,
+    date: new Date().toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+  }
+  try {
+    await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newReview),
+    })
+  } catch {}
+  const updated = [newReview, ...loadReviews()]
+  saveReviews(updated)
+  setUserReviews(updated)
+  setMessage("")
+  setRating(0)
+  setSubmitted(true)
+}
 
   return (
     <section id="testimonials" className="relative py-28">
