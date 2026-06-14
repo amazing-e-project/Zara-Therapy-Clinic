@@ -53,7 +53,7 @@ function getStoredAppointments(): Appointment[] {
   } catch {
     return []
   }
-}
+} 
 
 function saveAppointments(appts: Appointment[]) {
   localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(appts))
@@ -103,12 +103,10 @@ function BookingCard({
 
   const photo = therapist ? getTherapistPhoto(therapist) : null
 
-  function handleCancel() {
-    setCancelling(true)
-    // Brief animation then fire
-    setTimeout(() => onCancel(appointment.id), 350)
-  }
-
+function handleCancel() {
+  setCancelling(true)
+  setTimeout(() => onCancel(appointment.id), 350)
+}
   return (
     <article
       className={`group relative flex flex-col border border-border bg-card/70 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 ${
@@ -426,24 +424,29 @@ export function UserDashboard({
   }, [loadAppointments])
 
   /* Cancel handler — removes appointment and releases therapist slot */
-  function handleCancel(id: string) {
-    const all = getStoredAppointments()
-    const updated = all.filter((a) => a.id !== id)
-    saveAppointments(updated)
-    // Re-read to sync state immediately
-    const full = getLoggedInUserFull()
-    const mine = updated.filter(
-      (a) =>
-        a.name.toLowerCase() === (user ?? "").toLowerCase() ||
-        (full?.email && a.email.toLowerCase() === full.email.toLowerCase())
-    )
-    const upcoming = mine.filter(
-      (a) => new Date(a.date + "T23:59:59") >= new Date()
-    )
-    setAppointments(upcoming)
-    // Dispatch a custom event so BookingWizard's availability check also re-evaluates
-    window.dispatchEvent(new CustomEvent("zara_appointments_changed"))
-  }
+  async function handleCancel(id: string) {
+  try {
+    await fetch("/api/bookings", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId: id }),
+    })
+  } catch {}
+  const all = getStoredAppointments()
+  const updated = all.filter((a) => a.id !== id)
+  saveAppointments(updated)
+  const full = getLoggedInUserFull()
+  const mine = updated.filter(
+    (a) =>
+      a.name.toLowerCase() === (user ?? "").toLowerCase() ||
+      (full?.email && a.email.toLowerCase() === full.email.toLowerCase())
+  )
+  const upcoming = mine.filter(
+    (a) => new Date(a.date + "T23:59:59") >= new Date()
+  )
+  setAppointments(upcoming)
+  window.dispatchEvent(new CustomEvent("zara_appointments_changed"))
+}
 
   /* ── Render ── */
   return (

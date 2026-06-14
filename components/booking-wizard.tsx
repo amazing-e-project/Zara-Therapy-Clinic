@@ -212,7 +212,7 @@ export function BookingWizard({
     setStep("confirm")
   }
 
-  function handleConfirm() {
+  async function handleConfirm() {
     if (!selectedService || !selectedDate || !selectedTime) return
 
     /*
@@ -245,17 +245,19 @@ export function BookingWizard({
       userGender: userGender,
       bookedAt: new Date().toISOString(),
     }
+    try {
+      await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(appt),
+      })
+    } catch {}
     const existing = getStoredAppointments()
     existing.push(appt)
     localStorage.setItem(APPOINTMENTS_KEY, JSON.stringify(existing))
     setAppointments(existing)
     setLiveBookings(existing)
     setStep("success")
-
-    /*
-      Dispatch real-time event so UserDashboard instantly reflects
-      the new booking without a page reload.
-    */
     window.dispatchEvent(new CustomEvent("zara_appointments_changed"))
   }
 
