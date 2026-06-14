@@ -206,9 +206,12 @@ export function Testimonials({
   const [submitted, setSubmitted] = useState(false)
   const [error,     setError]     = useState("")
 
-  useEffect(() => {
-    setUserReviews(loadReviews())
-  }, [])
+ useEffect(() => {
+  fetch('/api/reviews')
+    .then(res => res.json())
+    .then(data => setUserReviews(data.reviews ?? []))
+    .catch(() => setUserReviews(loadReviews()))
+}, [])
 
   // Reset success banner when user logs out
   useEffect(() => {
@@ -245,9 +248,7 @@ async function handleSubmit(e: React.FormEvent) {
       body: JSON.stringify(newReview),
     })
   } catch {}
-  const updated = [newReview, ...loadReviews()]
-  saveReviews(updated)
-  setUserReviews(updated)
+  setUserReviews(prev => [newReview, ...prev])
   setMessage("")
   setRating(0)
   setSubmitted(true)
