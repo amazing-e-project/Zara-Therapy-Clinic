@@ -92,6 +92,7 @@ export function About() {
                 <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
               </div>
               <h3 className="font-heading text-xl">{member.name}</h3>
+              <p className="text-sm text-muted-foreground">Developer</p>
             </div>
           ))}
         </div>
