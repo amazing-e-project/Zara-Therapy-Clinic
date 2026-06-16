@@ -154,7 +154,7 @@ export const therapists: Therapist[] = [
     experience: "8 Years of Experience",
     about:
       "Faisal has a gift for reading what words cannot say — he works intuitively, adjusting pressure and rhythm in real time to what the body needs in the moment. His sessions are as meditative for him as they are healing for his clients.",
-    specialties: ["Swedish Relaxation", "Deep Tissue Release", "Scalp & Crown Renewal"],
+    specialties: ["Swedish Relaxation", "Deep Tissue Release", "Scalp & Crown Renewal", "Radiance Facial Therapy"],
     initials: "FD",
     accentHue: "90",
     photoUrl: MALE_PHOTOS[3],
