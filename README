@@ -1,0 +1,8 @@
+How to open the website:
+
+1) download the codes in github
+2) extract the file
+3) go to terminal and put “cd Zara-Therapy-Clinic-main”
+4) after that type “npm install” and wait for it to install
+5) after it installed type “npm run dev” and copy paste localhost
+6) got to any browser and paste the localhost there
